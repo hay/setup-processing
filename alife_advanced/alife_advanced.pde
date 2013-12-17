@@ -1,9 +1,10 @@
 /**
- * ALIFE - Artificial Life sketch
+ * ALIFE - Artificial Life sketch - Advanced version
  * By Hay Kranen < huskyr@gmail.com > < http://www.haykranen.nl >
  * Released under the terms of the MIT license 
  */
- 
+
+
 int minNumberOfCells = 100;
 int startNumberOfCells = 100;
 int maxNumberOfCells = 1000;
@@ -17,8 +18,7 @@ boolean bumpStick = false;
 boolean bumpSpeed = false;
 boolean circleCells = false;
 boolean bumpReverse = false;
-boolean clearScreen = true;
-boolean bumpAlpha = false;
+boolean clearScreen = false;
 boolean strokeCells = false;
 boolean fillCells = true;
 boolean rotateCells = false;
@@ -27,77 +27,79 @@ boolean alphaFillAndStoke = false;
 boolean bumpBirth = true;
 boolean bumpDeath = true;
 boolean cellsDie = true;
-float minCellSpeed = 0.1;
-float maxCellSpeed = 0.3;
+float minCellSpeed = 0.05;
+float maxCellSpeed = 0.1;
 float bumpBirthDieChange = 0.54; // The sweet spot seems to be around 0.54
 
 ArrayList<Cell> cells;
 
 void setup() {
   int sw = matrixWidth * screenSize;
-  int sh = matrixHeight * screenSize; 
+  int sh = matrixHeight * screenSize;
+
   size(sw, sh);
   background(0);
-  
-  if (!strokeCells) {
+
+  if (strokeCells == false) {
     noStroke();
   }
-  
-  if (!fillCells) {
+
+  if (fillCells == false) {
     noFill();
   }
-  
+
   cells = new ArrayList<Cell>();
-  
+
   for (int i = 0; i < startNumberOfCells; i++) {
     cells.add( new Cell(i) );
   }
 }
 
-void draw() {
-  if (clearScreen) {
+void draw() { 
+  if (clearScreen == true) {
     background(0);
   }
-  
+
   for (int i = 0; i < cells.size(); i++) {
+
     Cell cell = cells.get(i);
-    
     cell.update();
-        
+
     // Check for death
     if (cell.life < 1) {
       killCell(i);
     }
-    
+
     int collideWith = getCollide(cell);
-    
+
     if (collideWith != -1) {
       Cell other = cells.get( collideWith );
       cell.bumpWith( other );
-      
+
       if (bumpBirth && bumpDeath) {
         makeOrKillCell(cell.id);
-      } else if (bumpBirth && !bumpDeath) {
+      } 
+      else if (bumpBirth && !bumpDeath) {
         makeCell();
-      } else if (!bumpBirth && bumpDeath) {
+      } 
+      else if (!bumpBirth && bumpDeath) {
         killCell(cell.id);
       }
     }
-    
+
     if (rotateCells) {
       pushMatrix();
       translate(0, 0);
       rotate(cell.x * cell.speed);
     }
-    
+
     cell.draw();
-    
+
     if (rotateCells) {
       popMatrix();
     }
   }
-  
-  frame.setTitle("alife: " + cells.size() + " cells");
+ 
 }
 
 int getCollide(Cell cell) {
@@ -107,7 +109,7 @@ int getCollide(Cell cell) {
       return i;
     }
   }
-  
+
   return -1;
 }
 
@@ -119,10 +121,11 @@ void makeCell() {
 
 void makeOrKillCell(int id) {
   float r = random(1);
-  
+
   if (r < bumpBirthDieChange) {
     makeCell();
-  } else {
+  } 
+  else {
     killCell(id);
   }
 }
