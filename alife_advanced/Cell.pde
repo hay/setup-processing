@@ -100,7 +100,6 @@ class Cell {
     }
 
     if (bumpReverse) {
-      //Modulo, ook wel heftig
       direction = (direction + 2) % 4;
       other.direction = (direction + 2) % 4;
     }
